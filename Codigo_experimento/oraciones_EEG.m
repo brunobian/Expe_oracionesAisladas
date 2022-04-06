@@ -1,44 +1,54 @@
 function oraciones()
+% BB 6/4/22: Este codigo viene originalmente del experimento de
+% corregistro, por esto va a haber muchas cosas de EEG que no van a hacer
+% falta. Muchas se pueden dejar, total derÃ­an estar dentro de un if EEG que
+% se inicializa con el prompt que aparece al lanzar la funciÃ³n
 
-%      EVENTO                      | marca ET      | marca eeg
+
+% Si es necesario, se pueden cambiar las marcas y poner solo texto, no hace
+% falta que sean numeros
+
+%      EVENTO                      | marca ET      | marca eeg (no usamos)
 % Base                             |               | 0
 % inicio expe                      | keyword 244   | 244
 % inicio bloque                    | keyword 254   | 254
 % cruz de fijacion                 | keyword i     | i (i: orac ID)
 % aparece punto rojo               | keyword 220   | 220
-% aparece text, start lectura Prov | keyword 230   | 230
+% aparece text, start lectura Asil | keyword 230   | 230
 % aparece text, start lectura Cont | keyword 231   | 231
 % aparece text, start lectura Train| keyword 233   | 233
 % desaparece texto, fin lectura	   | keyword 221   | 221
 % aparece pregunta                 | keyword 222   | 222
 % responde, desparece pregunta	   | keyword 223   | 223
 % fin trial	                       | keyword 224   | 224
-% Final bloque                     | keyword 254   | 255
+% Final bloque                     | keyword 255   | 255
 % Final expe                       | keyword 245   | 245
 
 
 try 
    
-addpath('C:\EXPE\eyetracker_Funciones\funciones_eyetracker')  %adaptarlo al directorio que usemoes en la UNS
-addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
+% addpath('C:\EXPE\eyetracker_Funciones\funciones_eyetracker')  %adaptarlo al directorio que usemoes en la UNS
+% addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
 
-    pathname='C:\Users\LNI\Documents\Bbianchi';   
+addpath('/data/brunobian/Documents/Repos/Expe_oracionesAisladas/Codigo_experimento/funciones_eyetracker')
+
+    pathname='/data/brunobian/Documents/Repos/Expe_oracionesAisladas/Codigo_experimento/';   
     filename='oracionesFINAL';    
     load(fullfile(pathname, filename))
     disp(['Archivo de oraciones ' filename ' cargado.'])    
-    DATA=Shuffle(DATA);%#ok<NODEF> % revuelve las oraciones.
+%     DATA=Shuffle(DATA);%#ok<NODEF> % revuelve las oraciones.
     DATA=agrega_preguntasino(DATA,.3);
     
     % cargo las oraciones de practica
-    disp('Archivo de práctica "oracionesPRACTICA" cargado.')
+    disp('Archivo de prï¿½ctica "oracionesPRACTICA" cargado.')
     DATAPRACT=load('oracionesPRACTICA');DATAPRACT=DATAPRACT.DATA;
     DATAPRACT=agrega_preguntasino(DATAPRACT,.5);
 %     
 %  preguntas iniciales
-    respuesta= inputdlg({'Nombre (no más de 8 caracteres)' ...
+    respuesta= inputdlg({'Nombre (no mï¿½s de 8 caracteres)' ...
                          'Edad' ...
-                         '¿Usamos Eyelink?(S/N)' ...
-                         '¿Usamos EEG?(S/N)' ...
+                         'ï¿½Usamos Eyelink?(S/N)' ...
+                         'ï¿½Usamos EEG?(S/N)' ...
                          'Inicio'},...
                          'Ingrese su Nombre',1,{'test' '24' 'S' 'S' '1'});
                      
@@ -50,7 +60,7 @@ addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
     if init.etConectado 
         disp('Eyetracker en uso.')
     else
-        disp('Modo prueba, sin conexión con el Eyetracker.')        
+        disp('Modo prueba, sin conexiï¿½n con el Eyetracker.')        
     end
     
 %  inicializa video y eyelink
@@ -86,7 +96,7 @@ addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
     init.eegConect =strcmp(upper(respuesta{4}),'S');
     init.portDir   = 'C100'; % Direccion del puerto
     init.lptport   = hex2dec(init.portDir);
-    init.baseCode  = 0; % Código base. Del que parte y al que vuelve dsp de cada marca
+    init.baseCode  = 0; % Cï¿½digo base. Del que parte y al que vuelve dsp de cada marca
     
     % Arranco el EEG y el ET con una marca
     %%%% VIEJOOOO %%%%
@@ -114,12 +124,12 @@ addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
         pseudo_calibracion(w,init);
     end
     
-% PRÁCTICA!!!!!!
-% PRÁCTICA!!!!!!    
-% PRÁCTICA!!!!!!
+% PRï¿½CTICA!!!!!!
+% PRï¿½CTICA!!!!!!    
+% PRï¿½CTICA!!!!!!
     Screen('fillrect',w,init.colback)% aparece una pantalla para empezar la practica
-    Screen('TextSize', w, 20);%ver tamaño    
-    Screen('DrawText', w, 'Pulse una tecla para comenzar práctica',init.CX-300,init.CY-100,0);
+    Screen('TextSize', w, 20);%ver tamaï¿½o    
+    Screen('DrawText', w, 'Pulse una tecla para comenzar prï¿½ctica',init.CX-300,init.CY-100,0);
     t=GetSecs;Screen('Flip', w,t+init.ifi);
     while ~KbCheck;end %espero a que toque una tecla
     Screen('FillRect', w, init.colback);
@@ -131,7 +141,7 @@ addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
         if start  == 1 % Si estamos corriendolo por primera vez
             [DATAPRACT init cond_salida_pract]=runtrial(DATAPRACT,w,init,trial);%un trial
             if cond_salida_pract==1
-                disp(['Práctica interrumpida en el trial ' num2str(trial) '.'])            
+                disp(['Prï¿½ctica interrumpida en el trial ' num2str(trial) '.'])            
                 break
             end
             save('porsi','DATA','init','DATAPRACT');
@@ -155,8 +165,8 @@ addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
         end
         
         Screen('fillrect',w,init.colback)
-        Screen('TextSize', w, 20);%ver tamaño    
-        Screen('DrawText', w, 'Fin de la práctica',init.CX-200,init.CY-100,0);
+        Screen('TextSize', w, 20);%ver tamaï¿½o    
+        Screen('DrawText', w, 'Fin de la prï¿½ctica',init.CX-200,init.CY-100,0);
         Screen('DrawText', w, 'Pulse una tecla para comenzar el experimento',init.CX-300,init.CY,0);
         t=GetSecs;Screen('Flip', w,t+init.ifi);        
         while ~KbCheck;end %espero a que toque una tecla
@@ -188,7 +198,7 @@ addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
                 etMsg = ['keyword ' num2str(eegMsg)];
                 sendTriggers(init, eegMsg, etMsg)
                 
-                instrucciones={'Vamos a hacer una pausa para descansar.' '' 'Pulse una tecla cuando esté listo para seguir.'};
+                instrucciones={'Vamos a hacer una pausa para descansar.' '' 'Pulse una tecla cuando estï¿½ listo para seguir.'};
                 muestra_instrucciones(w,init,instrucciones);
 
                 recalibracion(init.eyelink_conf)                                              
@@ -211,7 +221,7 @@ addpath('C:\Users\LNI\Documents\Bbianchi\puerto paralelo')
         end
     end
     
-    % Envío marcas del Final del Experimento
+    % Envï¿½o marcas del Final del Experimento
     eegMsg = 255;
     etMsg  = ['keyword ' num2str(eegMsg)];
     sendTriggers(init, eegMsg, etMsg)
@@ -301,7 +311,7 @@ function DATA=agrega_preguntasino(DATA,proporcion)
         l(i)=length(DATA(i).pregunta);
     end
     ind=find(l>1); % las oraciones que tienen pregunta...
-    ind=Shuffle(ind); % las revuelvo
+%     ind=Shuffle(ind); % las revuelvo
     proporcion_oraciones_con_pregunta=proporcion;
     cuantas_preguntas=ceil(length(ind)*proporcion_oraciones_con_pregunta);
     ind=ind(1:cuantas_preguntas); %me quedo con las primeras (en el orden shuffleado)
@@ -322,7 +332,7 @@ function [DATA,init,cond_salida]=runtrial(DATA,w,init,trial)
     drawfix(w,init);
     t=GetSecs;Screen('Flip', w,t+init.ifi);     
 
-    % Envío marcas de la cruz
+    % Envï¿½o marcas de la cruz
     etMsg = ['keyword ' num2str(trial)];
     sendTriggers(init, trial, etMsg)
     
@@ -367,7 +377,7 @@ function [DATA,init,cond_salida]=runtrial(DATA,w,init,trial)
     Screen('FillOval', w,[255 0 0], pos_1raletra);
     t=GetSecs;Screen('Flip', w,t+init.ifi); 
     
-    % Envío marcas del puntito (220)
+    % Envï¿½o marcas del puntito (220)
     etMsg = ['keyword ' num2str(220) num2str(trial)];
     sendTriggers(init, 220, etMsg)
     
@@ -389,7 +399,7 @@ function [DATA,init,cond_salida]=runtrial(DATA,w,init,trial)
     t=GetSecs;Screen('Flip', w,t+init.ifi); 
     Screen('close',temp);
     
-    % Envío marcas del Comienzo de lectura
+    % Envï¿½o marcas del Comienzo de lectura
     eegMsg = 230+DATA(trial).tipo;
     etMsg  = ['keyword ' num2str(eegMsg)];
     sendTriggers(init, eegMsg, etMsg)
@@ -404,7 +414,7 @@ function [DATA,init,cond_salida]=runtrial(DATA,w,init,trial)
     DATA(trial).tresp_ojo2=tresp; %tiempo de respuesta del ojo al fin de la lectura
     DATA(trial).condicion2=condicion; % condicion de salida lectura=[0=ojo 1=timeout 2=teclado 3=mousebutton]
 
-    % Envío marcas del Fin de lectura
+    % Envï¿½o marcas del Fin de lectura
     eegMsg = 221;
     etMsg  = ['keyword ' num2str(eegMsg)];
     sendTriggers(init, eegMsg, etMsg)
@@ -419,7 +429,7 @@ function [DATA,init,cond_salida]=runtrial(DATA,w,init,trial)
         [DATA]=toma_respuesta_pregunta(w,init,DATA,trial); 
     end
 
-    % Envío marcas de Fin trial
+    % Envï¿½o marcas de Fin trial
     eegMsg = 224;
     etMsg  = ['keyword  ' num2str(eegMsg)];
     sendTriggers(init, eegMsg, etMsg)
@@ -470,7 +480,7 @@ try
         Screen('close',imtemp)
     end
     
-    % Envío marcas del Comienzo Pregunta
+    % Envï¿½o marcas del Comienzo Pregunta
     eegMsg = 222;
     etMsg  = ['keyword ' num2str(eegMsg)];
     sendTriggers(init, eegMsg, etMsg)
@@ -506,7 +516,7 @@ try
     Screen('FillRect', w, init.colback);
     t=GetSecs;Screen('Flip', w,t+init.ifi); 
 
-    % Envío marcas del Fin Pregunta
+    % Envï¿½o marcas del Fin Pregunta
     eegMsg = 223;
     etMsg  = ['keyword ' num2str(eegMsg)];
     sendTriggers(init, eegMsg, etMsg)
@@ -632,7 +642,7 @@ function muestra_instrucciones(w,init,instrucciones)
 % muestra instrucciones en la pantalla   
 
     [width, height]=Screen('WindowSize', w);               
-    Screen('TextSize', w, 18);%ver tamaño            
+    Screen('TextSize', w, 18);%ver tamaï¿½o            
     Screen('FillRect', w, init.colback);    
     for i=1:length(instrucciones)
         Screen('DrawText', w,instrucciones{i} ,width*.1,height*.15+40*i, 0);    
